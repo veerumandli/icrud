@@ -1,2 +1,9 @@
-dev
 dev/
+__pycache__/
+*.pyc
+.vscode/
+.DS_Store
+.env
+*.sqlite
+*.db
+*.log

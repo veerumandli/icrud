@@ -1,37 +1,102 @@
-class Model():
+import mysql.connector
+from mysql.connector import errorcode
+from src.config.database import host, port, user, password, database
+from src.core.SQLBuilder import SQLBuilder
 
-    tableName = ""
 
+class Model(SQLBuilder):
+    """
+    Base Model class providing ORM-like features.
+    """
+    table_name = ""
     columns = {}
-
-    primaryKey = "id"
-
-    createdAt = "created_at"
-
-    modifiedAt = "modified_at"
-
+    primary_key = "id"
+    created_at = "created_at"
+    modified_at = "modified_at"
     validations = []
 
-    def before():
+    def __init__(self, **kwargs):
+        """
+        Initialize the model instance with given keyword arguments.
+        """
+        for col in self.columns.keys():
+            setattr(self, col, kwargs.get(col))
+
+    @classmethod
+    def _get_connection(cls):
+        """
+        Get a database connection.
+        """
+        return cls.get_connection()
+
+    @staticmethod
+    def get_connection():
+        """
+        Create and return a new MySQL database connection using configuration values.
+        Handles authentication and database errors gracefully.
+        """
+        try:
+            conn = mysql.connector.connect(
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                database=database
+            )
+            return conn
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                raise Exception(
+                    "Database authentication failed: Check your username or password.")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                raise Exception(f"Database '{database}' does not exist.")
+            else:
+                raise Exception(f"Database connection error: {err}")
+
+    def before(self):
+        """
+        Lifecycle hook called before any operation.
+        """
         pass
 
-    def after():
+    def after(self):
+        """
+        Lifecycle hook called after any operation.
+        """
         pass
 
-    def beforeInsert():
+    def beforeInsert(self):
+        """
+        Lifecycle hook called before insert operation.
+        """
         pass
 
-    def afterInsert():
+    def afterInsert(self):
+        """
+        Lifecycle hook called after insert operation.
+        """
         pass
 
-    def beforeUpdate():
+    def beforeUpdate(self):
+        """
+        Lifecycle hook called before update operation.
+        """
         pass
 
-    def afterUpdate():
+    def afterUpdate(self):
+        """
+        Lifecycle hook called after update operation.
+        """
         pass
 
-    def beforeDelete():
+    def beforeDelete(self):
+        """
+        Lifecycle hook called before delete operation.
+        """
         pass
 
-    def afterDelete():
+    def afterDelete(self):
+        """
+        Lifecycle hook called after delete operation.
+        """
         pass

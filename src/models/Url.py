@@ -2,7 +2,7 @@ from src.core.Model import Model
 
 
 class Url(Model):
-
+    table_name = "urls"
     columns = {
         "id": {
             "key": "id",
