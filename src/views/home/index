@@ -1,4 +1,0 @@
-Hello this is a Home page {{customer}}
-
-
-<a href="/login">Go to Login Page</a>
