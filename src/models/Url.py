@@ -19,7 +19,7 @@ class Url(Model):
             "type": "varchar",
             "length": 50
         },
-        "clicks": {
+        "count": {
             "key": "clicks",
             "type": "int",
         },

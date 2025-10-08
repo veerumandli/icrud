@@ -5,6 +5,11 @@ from src.core.Decorators import model_from_path
 
 app = Flask(__name__, template_folder='views')
 
+
+@app.route("/", methods=['GET'])
+def home():
+    return "<h1>Welcome to iCRUD</h1>"
+
 # -------------------------
 # CREATE (POST)
 # -------------------------

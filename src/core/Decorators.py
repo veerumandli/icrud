@@ -1,15 +1,18 @@
 from functools import wraps
 import importlib
 
+
 def to_camel_case(name: str) -> str:
     return ''.join(word.capitalize() for word in name.split('_'))
 
+
 def model_from_path(func):
     @wraps(func)
-    def wrapper(table_name, *args, **kwargs):
+    def wrapper(table_name: str, *args, **kwargs):
         try:
             class_name = to_camel_case(table_name)
-            print(f"[DEBUG] URL table_name: {table_name} -> Converted class: {class_name}")
+            print(
+                f"[DEBUG] URL table_name: {table_name} -> Converted class: {class_name}")
 
             module = importlib.import_module(f"src.models.{class_name}")
             print(f"[DEBUG] Imported module: src.models.{class_name}")
