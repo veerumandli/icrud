@@ -22,6 +22,7 @@ def to_camel_case(name: str) -> str:
 
 
 
+
 def model_from_path(func):
     @wraps(func)
     def wrapper(table_name: str, *args, **kwargs):
