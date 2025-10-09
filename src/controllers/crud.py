@@ -12,6 +12,9 @@ def create_item(Model):
 
 def fetch_list(Model):
     if Model:
+        page = request.args.get('page', 1)
+        limit = request.args.get('limit', 20)
+        filter = request.args.get('filter')
         data = Model.all()
         return jsonify({'success': True, 'data': data})
     else:

@@ -16,7 +16,6 @@ class SQLBuilder():
         keys = []
         values = []
         placeholders = []
-
         for col, meta in cls.columns.items():
             if col in kwargs:
                 keys.append(col)
@@ -53,14 +52,14 @@ class SQLBuilder():
         Note:
             The subclass must implement get_connection() method to provide a database connection.
         """
+        conn = None
+        cursor = None
+        conn = cls.get_connection()
         keys = []
         for col, meta in cls.columns.items():
             keys.append(f'{meta["key"]} as {col}')
         sql = f"SELECT {', '.join(keys)} FROM {cls.table_name}"
-        conn = None
-        cursor = None
         try:
-            conn = cls.get_connection()
             cursor = conn.cursor(dictionary=True)
             cursor.execute(sql)
             return cursor.fetchall()

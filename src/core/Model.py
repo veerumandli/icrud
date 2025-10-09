@@ -10,6 +10,7 @@ class Model(SQLBuilder):
     """
     table_name = ""
     columns = {}
+    time_stamps = True
     primary_key = "id"
     created_at = "created_at"
     modified_at = "modified_at"
@@ -19,6 +20,9 @@ class Model(SQLBuilder):
         """
         Initialize the model instance with given keyword arguments.
         """
+        print(self.columns)
+
+        print(self.columns)
         for col in self.columns.keys():
             setattr(self, col, kwargs.get(col))
 
@@ -29,12 +33,23 @@ class Model(SQLBuilder):
         """
         return cls.get_connection()
 
-    @staticmethod
-    def get_connection():
+    @classmethod
+    def get_connection(cls):
         """
         Create and return a new MySQL database connection using configuration values.
         Handles authentication and database errors gracefully.
         """
+        if cls.time_stamps:
+            if cls.created_at != "":
+                cls.columns[cls.created_at] = {
+                    "key": cls.created_at,
+                    "type": "timestamp",
+                }
+            if cls.modified_at != "":
+                cls.columns[cls.modified_at] = {
+                    "key": cls.modified_at,
+                    "type": "timestamp",
+                }
         try:
             conn = mysql.connector.connect(
                 host=host,
