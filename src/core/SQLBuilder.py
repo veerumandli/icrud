@@ -1,5 +1,31 @@
 class SQLBuilder():
     @classmethod
+    def __build_where(cls, filter: str):
+        """
+        Conditions: gt, lt, ge, le, eq
+        Logical Operators: and, or
+        Example: count eq 10 and status eq 1 ==> where count = 10 and status = 1
+        
+        """
+        if filter == '': return ''
+        else:
+            # where_clause = 'where '+ filter.replace('eq', '=')
+            # return where_clause
+            conditions = {
+                ' eq ': ' = ',
+                ' gt ': ' > ',
+                ' lt ': ' < ',
+                ' ge ': ' >= ',
+                ' le ': ' <= ',
+                ' ne ': ' != '
+            }
+            build_where = f"WHERE {filter}"
+            for key,value in conditions.items():
+                build_where = build_where.replace(key,value)
+            return build_where
+
+    
+    @classmethod
     def create(cls, **kwargs):
         """
         Insert a new record into the database table.
@@ -42,7 +68,7 @@ class SQLBuilder():
                 conn.close()
 
     @classmethod
-    def all(cls):
+    def all(cls, page = 0, limit = 0, filter=''):
         """
         Retrieve all records from the database table.
 
@@ -58,7 +84,13 @@ class SQLBuilder():
         keys = []
         for col, meta in cls.columns.items():
             keys.append(f'{meta["key"]} as {col}')
-        sql = f"SELECT {', '.join(keys)} FROM {cls.table_name}"
+        conditions = cls.__build_where(filter)
+        if page and limit:
+            sql = f"SELECT {', '.join(keys)} FROM {cls.table_name} {conditions} limit {limit} offset {(page-1)*limit}"
+        else:
+            sql = f"SELECT {', '.join(keys)} FROM {cls.table_name} {conditions}"
+        
+        print(sql)
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute(sql)

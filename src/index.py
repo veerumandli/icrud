@@ -1,7 +1,9 @@
 from flask import Flask
-from src.controllers.crud import create_item, fetch_list, fetch_detail
+from src.controllers.crud import create_item, fetch_detail,fetch_list
 
 from src.core.Decorators import model_from_path
+
+
 
 app = Flask(__name__, template_folder='views')
 
@@ -24,7 +26,6 @@ def post_route(Model):
 # READ ALL (GET)
 # -------------------------
 
-
 @app.route("/api/<table_name>/all", methods=['GET'])
 @model_from_path
 def get_route(Model):
@@ -46,3 +47,4 @@ def get_one_route(Model, id):
 # -------------------------
 if __name__ == '__main__':
     app.run(debug=True)
+    

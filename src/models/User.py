@@ -1,6 +1,6 @@
 from src.core.Model import Model
-class UserOrder(Model):
-    table_name = "user_orders"
+class User(Model):
+    table_name = "users"
     columns = {
         "id": {
             "key": "id",
