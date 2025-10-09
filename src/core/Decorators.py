@@ -3,30 +3,29 @@ import importlib
 import inflect
 import re
 p = inflect.engine()
+
+
 def to_camel_case(name: str) -> str:
     # Remove special characters except underscores
     name = re.sub(r'[^a-zA-Z0-9_]', '', name)
-    
+
     # Split into words
     parts = name.split('_')
-    
+
     # Convert plural → singular using inflect
     singular_parts = [
-        p.singular_noun(word) if p.singular_noun(word) else  word
+        p.singular_noun(word) if p.singular_noun(word) else word
         for word in parts
     ]
     # Join as PascalCase (CamelCase)
     class_name = ''.join(word.capitalize() for word in singular_parts)
-    
+
     return class_name
-
-
 
 
 def model_from_path(func):
     @wraps(func)
     def wrapper(table_name: str, *args, **kwargs):
-        import importlib
         try:
             # Convert table_name to PascalCase singular class
             class_name = to_camel_case(table_name)
