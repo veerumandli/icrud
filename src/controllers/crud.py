@@ -12,7 +12,7 @@ def create_item(Model):
 
 def fetch_list(Model):
     if Model:
-        data = [obj.to_dict() for obj in Model.all()]
+        data = Model.all()
         return jsonify({'success': True, 'data': data})
     else:
         return jsonify({'success': False, 'error': 'Model not provided'}), 400

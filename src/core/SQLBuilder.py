@@ -53,7 +53,10 @@ class SQLBuilder():
         Note:
             The subclass must implement get_connection() method to provide a database connection.
         """
-        sql = f"SELECT * FROM {cls.table_name}"
+        keys = []
+        for col, meta in cls.columns.items():
+            keys.append(f'{meta["key"]} as {col}')
+        sql = f"SELECT {', '.join(keys)} FROM {cls.table_name}"
         conn = None
         cursor = None
         try:

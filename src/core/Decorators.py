@@ -1,27 +1,44 @@
 from functools import wraps
 import importlib
-
+import inflect
+import re
+p = inflect.engine()
 def to_camel_case(name: str) -> str:
-    return ''.join(word.capitalize() for word in name.split('_'))
+    # Remove special characters except underscores
+    name = re.sub(r'[^a-zA-Z0-9_]', '', name)
+    
+    # Split into words
+    parts = name.split('_')
+    
+    # Convert plural → singular using inflect
+    singular_parts = [
+        p.singular_noun(word) if p.singular_noun(word) else  word
+        for word in parts
+    ]
+    # Join as PascalCase (CamelCase)
+    class_name = ''.join(word.capitalize() for word in singular_parts)
+    
+    return class_name
+
+
 
 def model_from_path(func):
     @wraps(func)
-    def wrapper(table_name, *args, **kwargs):
+    def wrapper(table_name: str, *args, **kwargs):
+        import importlib
         try:
+            # Convert table_name to PascalCase singular class
             class_name = to_camel_case(table_name)
-            print(f"[DEBUG] URL table_name: {table_name} -> Converted class: {class_name}")
 
+            # Import module dynamically
             module = importlib.import_module(f"src.models.{class_name}")
-            print(f"[DEBUG] Imported module: src.models.{class_name}")
 
+            # Get the class from module
             model_class = getattr(module, class_name)
-            print(f"[DEBUG] Loaded class: {model_class}")
 
         except ModuleNotFoundError:
-            print(f"[ERROR] Model file src/models/{class_name}.py not found")
             return {"error": f"Model file for '{table_name}' not found"}, 404
         except AttributeError:
-            print(f"[ERROR] Class {class_name} not found in module")
             return {"error": f"Class '{class_name}' not found in model file"}, 404
 
         return func(model_class, *args, **kwargs)

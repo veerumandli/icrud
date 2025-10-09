@@ -1,6 +1,4 @@
 from src.core.Model import Model
-
-
 class Url(Model):
     table_name = "urls"
     columns = {
@@ -15,11 +13,11 @@ class Url(Model):
             "length": 300
         },
         "short_url": {
-            "key": "short_url",
+            "key": "shorturl",
             "type": "varchar",
             "length": 50
         },
-        "clicks": {
+        "count": {
             "key": "clicks",
             "type": "int",
         },
