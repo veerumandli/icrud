@@ -9,6 +9,7 @@ class Model(SQLBuilder):
     Base Model class providing ORM-like features.
     """
     table_name = ""
+    slug_column = ""
     columns = {}
     time_stamps = True
     primary_key = "id"
@@ -20,9 +21,6 @@ class Model(SQLBuilder):
         """
         Initialize the model instance with given keyword arguments.
         """
-        print(self.columns)
-
-        print(self.columns)
         for col in self.columns.keys():
             setattr(self, col, kwargs.get(col))
         from src.models.Url import Url
@@ -40,6 +38,8 @@ class Model(SQLBuilder):
         Create and return a new MySQL database connection using configuration values.
         Handles authentication and database errors gracefully.
         """
+        if cls.slug_column == "":
+            cls.slug_column = cls.primary_key
         if cls.time_stamps:
             if cls.created_at != "":
                 cls.columns[cls.created_at] = {
