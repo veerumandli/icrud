@@ -14,18 +14,17 @@ def fetch_list(Model):
     if Model:
         page = request.args.get('page', 1)
         limit = request.args.get('limit', 20)
-        filter = request.args.get('filter')
+        filter = request.args.get('filter', '')
         data = Model.all(page=int(page), limit=int(limit), filter=filter)
         return jsonify({'success': True, 'data': data})
     else:
         return jsonify({'success': False, 'error': 'Model not provided'}), 400
 
 
-
 def fetch_detail(Model, id):
     if Model:
         obj = Model.find(id)
-        data = obj.to_dict() if obj else None
+        data = obj if obj else None
         return jsonify({'success': True, 'data': data})
     else:
         return jsonify({'success': False, 'error': 'Model not provided'}), 400

@@ -3,6 +3,7 @@ from src.core.Model import Model
 
 class Url(Model):
     table_name = "urls"
+    slug_column = "status"
     columns = {
         "id": {
             "key": "id",

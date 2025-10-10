@@ -5,9 +5,10 @@ class SQLBuilder():
         Conditions: gt, lt, ge, le, eq
         Logical Operators: and, or
         Example: count eq 10 and status eq 1 ==> where count = 10 and status = 1
-        
+
         """
-        if filter == '': return ''
+        if filter == '':
+            return ''
         else:
             # where_clause = 'where '+ filter.replace('eq', '=')
             # return where_clause
@@ -20,11 +21,10 @@ class SQLBuilder():
                 ' ne ': ' != '
             }
             build_where = f"WHERE {filter}"
-            for key,value in conditions.items():
-                build_where = build_where.replace(key,value)
+            for key, value in conditions.items():
+                build_where = build_where.replace(key, value)
             return build_where
 
-    
     @classmethod
     def create(cls, **kwargs):
         """
@@ -68,7 +68,7 @@ class SQLBuilder():
                 conn.close()
 
     @classmethod
-    def all(cls, page = 0, limit = 0, filter=''):
+    def all(cls, page=0, limit=0, filter=''):
         """
         Retrieve all records from the database table.
 
@@ -89,7 +89,7 @@ class SQLBuilder():
             sql = f"SELECT {', '.join(keys)} FROM {cls.table_name} {conditions} limit {limit} offset {(page-1)*limit}"
         else:
             sql = f"SELECT {', '.join(keys)} FROM {cls.table_name} {conditions}"
-        
+
         print(sql)
         try:
             cursor = conn.cursor(dictionary=True)
@@ -117,13 +117,13 @@ class SQLBuilder():
         Note:
             The subclass must implement get_connection() method to provide a database connection.
         """
-        sql = f"SELECT * FROM {cls.table_name} WHERE {cls.primary_key} = %s"
         conn = None
         cursor = None
+        conn = cls.get_connection()
+        sql = f"SELECT * FROM {cls.table_name} WHERE {cls.slug_column} = '{id}' limit 0, 1"
         try:
-            conn = cls.get_connection()
             cursor = conn.cursor(dictionary=True)
-            cursor.execute(sql, (id,))
+            cursor.execute(sql)
             return cursor.fetchone()
         except Exception as e:
             raise e
