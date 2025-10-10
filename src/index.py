@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from src.controllers.crud import create_item, fetch_detail, fetch_list, update_item, delete_item
 
 from src.core.Decorators import model_from_path
@@ -9,14 +9,14 @@ app = Flask(__name__, template_folder='views')
 
 @app.route("/", methods=['GET'])
 def home():
-    return "<h1>Welcome to iCRUD</h1>"
+    return render_template("home/index.html")
 
 # -------------------------
 # READ ALL (GET)
 # -------------------------
 
 
-@app.route("/api/<table_name>/all", methods=['GET'])
+@app.route("/api/<table_name>", methods=['GET'])
 @model_from_path
 def get_route(Model):
     return fetch_list(Model)
