@@ -60,10 +60,3 @@ def put_route(Model, id):
 @model_from_path
 def delete_route(Model, id):
     return delete_item(Model, id)
-
-
-# -------------------------
-# APP RUNNER
-# -------------------------
-if __name__ == '__main__':
-    app.run(debug=True)
