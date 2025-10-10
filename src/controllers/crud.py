@@ -53,3 +53,13 @@ def delete_item(Model, id):
         return jsonify({'success': True, 'id': id})
     else:
         return jsonify({'success': False, 'error': 'Model not provided'}), 400
+
+
+# -------------------------
+def create_item(Model):
+    data = request.get_json()  # expects JSON body
+    try:
+        result = Model.create(**data)
+        return jsonify({"message": "Item created successfully", "data": result}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

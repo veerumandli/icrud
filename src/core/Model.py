@@ -25,6 +25,7 @@ class Model(SQLBuilder):
         print(self.columns)
         for col in self.columns.keys():
             setattr(self, col, kwargs.get(col))
+        from src.models.Url import Url
 
     @classmethod
     def _get_connection(cls):
