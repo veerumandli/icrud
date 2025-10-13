@@ -19,14 +19,15 @@ class SQLBuilder():
                 ' ge ': ' >= ',
                 ' le ': ' <= ',
                 ' ne ': ' != '
-            }  
-            column_map = {
-            'count': 'clicks'
             }
+            column_map = {}
+            for col, meta in cls.columns.items():
+                if col != meta['key']:
+                    column_map[col] = meta['key']
+
             for alias, column in column_map.items():
                 filter = filter.replace(alias, column)
 
-            
             build_where = f"WHERE {filter}"
             for key, value in conditions.items():
                 build_where = build_where.replace(key, value)
@@ -90,7 +91,7 @@ class SQLBuilder():
         conn = cls.get_connection()
         keys = []
         for col, meta in cls.columns.items():
-            keys.append(f'{meta["key"]} ')
+            keys.append(f'{meta["key"]} as {col}')
         conditions = cls.__build_where(filter)
         if page and limit:
             sql = f"SELECT {', '.join(keys)} FROM {cls.table_name} {conditions} limit {limit} offset {(page-1)*limit}"
@@ -139,5 +140,3 @@ class SQLBuilder():
                 cursor.close()
             if conn:
                 conn.close()
-
-
