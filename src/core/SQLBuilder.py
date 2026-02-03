@@ -112,6 +112,27 @@ class SQLBuilder():
                 conn.close()
 
     @classmethod
+    def filter(cls, conditions):
+        conn = None
+        cursor = None
+        conn = cls.get_connection()
+        tmp_conditions = []
+        for col, val in conditions.items():
+            tmp_conditions.append(f'{col} = "{val}"')
+        sql = f"SELECT * FROM {cls.table_name} WHERE {" and ".join(tmp_conditions)}"
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(sql)
+            return cursor.fetchone()
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+    @classmethod
     def find(cls, id):
         """
         Retrieve a single record by primary key.

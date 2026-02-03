@@ -1,33 +1,45 @@
 from src.core.Model import Model
+
+
 class User(Model):
     table_name = "users"
     columns = {
-        "id": {
-            "key": "id",
+        "user_id": {
+            "key": "user_id",
             "type": "int",
             "primary": True
         },
-        "user_id": {
-            "key": "user_id",
-            "type": "int"
+        "name": {
+            "key": "name",
+            "type": "varchar",
+            "length": 45
         },
-        "product_name": {
-            "key": "product_name",
+        "username": {
+            "key": "username",
+            "type": "varchar",
+            "length": 100
+        },
+        "password": {
+            "key": "password",
             "type": "varchar",
             "length": 150
         },
-        "quantity": {
-            "key": "quantity",
-            "type": "int"
-        },
-        "price": {
-            "key": "price",
-            "type": "decimal(10,2)"
-        },
         "status": {
             "key": "status",
-            "type": "enum",
-            "options": ["Pending", "Completed", "Cancelled"]
+            "type": "int",
+        },
+        "email_address": {
+            "key": "status",
+            "type": "varchar",
+            "length": 255
+        },
+        "is_email_verified": {
+            "key": "status",
+            "type": "int",
+        },
+        "otp": {
+            "key": "status",
+            "type": "int",
         },
         "created_at": {
             "key": "created_at",
